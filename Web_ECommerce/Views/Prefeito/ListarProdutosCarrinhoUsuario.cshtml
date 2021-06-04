@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Entities.Entities.Prefeito>
+
+@{
+    ViewData["Title"] = "ListarCandidatosCarrinhoUsuario";
+}
+
+<h1>Listar de Candidatos do Carrinho</h1>
+
+<br />
+<a class="text-dark" asp-area="" asp-controller="CompraUsuario" asp-action="FinalizarCompra">Comprar do carrinho</a>
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>Imagem</th>
+           
+
+           
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+
+                <td>
+                    @{
+                        if (!string.IsNullOrWhiteSpace(item.Url))
+                        {
+                            <img width="80" height="80" src=@item.Url />
+                        }
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.legenda)
+                </td>
+           
+                <td>
+
+                    @*@Html.ActionLink("Remover", "RemoverCarrinho", new { id = item.IdCandidatoCarrinho })*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
