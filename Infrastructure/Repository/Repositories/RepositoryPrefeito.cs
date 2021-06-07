@@ -31,58 +31,15 @@ namespace Infrastructure.Repository.Repositories
             {
                 return await banco.Prefeito.Where(exPrefeito).AsNoTracking().ToListAsync();
             }
-        }
+        }  
 
-        /*public async Task<List<Prefeito>> ListarPrefeitosCarrinhoUsuario(string userId)
+        public async Task<List<Prefeito>> ListarPrefeitosUsuario( )
         {
             using (var banco = new ContextBase(_optionsbuilder))
             {
-                var PrefeitosCarrinhoUsuario = await (from p in banco.Prefeito
-                                                     join c in banco.CompraUsuario on p.Id equals c.IdPrefeito
-                                                     join co in banco.Compra on c.IdCompra equals co.Id
-                                                     where c.UserId.Equals(userId)
-                                                     && c.Estado == EnumEstadoCompra.Prefeito_Carrinho
-                                                     select new Prefeito
-                                                     {
-                                                         Id = p.Id,
-                                                         Nome = p.Nome,
-                                                         Descricao = p.Descricao,
-                                                         Observacao = p.Observacao,
-                                                         Valor = p.Valor,
-                                                         QtdCompra = c.QtdCompra,
-                                                         IdPrefeitoCarrinho = c.Id,
-                                                         Url = p.Url,
-                                                         DataCompra = co.DataCompra
-
-                                                     }).AsNoTracking().ToListAsync();
-
-                return PrefeitosCarrinhoUsuario;
-
+                return await banco.Prefeito.AsNoTracking().ToListAsync();
             }
         }
-*/
-        
 
-        public async Task<List<Prefeito>> ListarPrefeitosUsuario(string userId)
-        {
-            using (var banco = new ContextBase(_optionsbuilder))
-            {
-                return await banco.Prefeito.Where(p => p.UserId == userId).AsNoTracking().ToListAsync();
-            }
-        }
-/*
-        public async Task<List<Prefeito>> ListarPrefeitosVendidos(string userId, string filtro)
-        {
-            using (var banco = new ContextBase(_optionsbuilder))
-            {
-                var PrefeitosVendidos = await (from p in banco.Prefeito
-                                              join c in banco.CompraUsuario on p.Id equals c.IdPrefeito
-                                              where p.UserId.Equals(userId) && c.Estado == EnumEstadoCompra.Prefeito_Comprado
-                                              && (string.IsNullOrWhiteSpace(filtro) || p.Descricao.Contains(filtro))
-                                              select p).AsNoTracking().ToListAsync();
-
-                return PrefeitosVendidos;
-            }
-        }*/
     }
 }

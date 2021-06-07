@@ -25,20 +25,21 @@ namespace Web_ECommerce.Controllers
 
         public readonly InterfaceVereadorApp _InterfaceVereadorApp;
 
+        private IWebHostEnvironment _environment;
 
-        //private IWebHostEnvironment _environment;
 
         public VereadorController(InterfaceVereadorApp InterfaceVereadorApp, UserManager<ApplicationUser> userManager, ILogger<VereadorController> logger, IWebHostEnvironment environment)
             : base(logger, userManager)
         {
             _InterfaceVereadorApp = InterfaceVereadorApp;
+            _environment = environment;
         }
 
         // GET: VereadorController
         public async Task<IActionResult> Index()
         {
             var idUsuario = await RetornarIdUsuarioLogado();
-            var test = await _InterfaceVereadorApp.ListarVereadorUsuario(idUsuario);
+            var test = await _InterfaceVereadorApp.ListarVereadorUsuario();
 
             return View(test);
         }
@@ -63,7 +64,18 @@ namespace Web_ECommerce.Controllers
         {
             try
             {
+
                 var idUsuario = await RetornarIdUsuarioLogado();
+                var test = await _InterfaceVereadorApp.ListarVereadorUsuario();
+
+                foreach (var item in test)
+                {
+                    if (item.Numero == Vereador.Numero)
+                    {
+                        ViewBag.existeNumero = "Ja existe esse numero";
+                        return View("Create", Vereador);
+                    }
+                }
 
                 Vereador.UserId = idUsuario;
                 Vereador.partido = Titulo.Vereador;
@@ -127,11 +139,9 @@ namespace Web_ECommerce.Controllers
 
                 return View("Edit", Vereador);
             }
-
-
-
             return RedirectToAction(nameof(Index));
         }
+      
 
         // GET: VereadorController/Delete/5
         public async Task<IActionResult> Delete(int id)
@@ -159,66 +169,24 @@ namespace Web_ECommerce.Controllers
             }
         }
 
-
-       /* public async Task<IActionResult> DashboardVendas()
-        {
-            ModelPai pai =new ModelPai();
-            var usuario = await _userManager.GetUserAsync(User);
-            pai.Total= await _InterfaceCompraUsuarioApp.MinhasCompras(usuario.Id);
-            var idUsuario = await RetornarIdUsuarioLogado();
-            pai.Carrinho = await _InterfaceVereadorApp.ListarVereadorCarrinhoUsuario(idUsuario);
-            return View(pai);
-        }*/
-
-
-        /*[HttpGet("/api/ListarVereadorVendidos")]
-        public async Task<JsonResult> ListarVereadorVendidos(string filtro)
+        [HttpGet("/api/RetornoVereador")]
+        public async Task<IActionResult> RetornoVereador()
         {
             var idUsuario = await RetornarIdUsuarioLogado();
-
-            return Json(await _InterfaceVereadorApp.ListarVereadorVendidos(idUsuario, filtro));
+            var teste = await _InterfaceVereadorApp.ListarVereadorUsuario();
+            return Json(teste);
         }
-*/
 
-        /*[AllowAnonymous]
-        [HttpGet("/api/ListarVereadorComEstoque")]
-        public async Task<JsonResult> ListarVereadorComEstoque(string descricao)
+        // POST: VereadorController/Delete/5
+        [HttpPost("/api/VotacaoVereador")]
+        public async Task<IActionResult> VotacaoVereador(int id)
         {
-            return Json(await _InterfaceVereadorApp.ListarVereadorComEstoque(descricao));
+            var resul = await _InterfaceVereadorApp.GetEntityById(id);
+            resul.voto++;
+             await _InterfaceVereadorApp.UpdateVereador(resul);
+
+            return Json("");
         }
-*/
-       /* public async Task<IActionResult> ListarVereadorCarrinhoUsuario()
-        {
-            var idUsuario = await RetornarIdUsuarioLogado();
-            return View(await _InterfaceVereadorApp.ListarVereadorCarrinhoUsuario(idUsuario));
-
-        }*/
-
-       /* // GET: VereadorController/Delete/5
-        public async Task<IActionResult> RemoverCarrinho(int id)
-        {
-            return View(await _InterfaceVereadorApp.ObterVereadorCarrinho(id));
-        }*/
-
-       /* // POST: VereadorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoverCarrinho(int id, Vereador Vereador)
-        {
-            try
-            {
-                var VereadorDeletar = await _InterfaceCompraUsuarioApp.GetEntityById(id);
-
-                await _InterfaceCompraUsuarioApp.Delete(VereadorDeletar);
-
-                return RedirectToAction(nameof(ListarVereadorCarrinhoUsuario));
-            }
-            catch (Exception erro)
-            {
-                await LogEcommerce(EnumTipoLog.Erro, erro);
-                return View();
-            }
-        }*/
 
         public async Task SalvarImagemVereador(Vereador VereadorTela)
         {
@@ -228,18 +196,25 @@ namespace Web_ECommerce.Controllers
 
                 if (VereadorTela.Imagem != null)
                 {
+                    var prefeito = await _InterfaceVereadorApp.GetEntityById(VereadorTela.Id);
 
+
+                    var webRoot = _environment.WebRootPath;
                     var permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                    var writePermission = new FileIOPermission(FileIOPermissionAccess.Append, string.Concat(webRoot, "/imgPrefeito"));
+                    permissionSet.AddPermission(writePermission);
 
                     var Extension = System.IO.Path.GetExtension(VereadorTela.Imagem.FileName);
 
-                    var NomeArquivo = string.Concat(Vereador.Id.ToString(), Extension);
+                    var NomeArquivo = string.Concat(VereadorTela.Id.ToString(), Extension);
 
+                    var diretorioArquivoSalvar = string.Concat(webRoot, "\\imgPrefeito\\", NomeArquivo);
 
+                    VereadorTela.Imagem.CopyTo(new FileStream(diretorioArquivoSalvar, FileMode.Create));
 
-                    Vereador.Url = string.Concat("https://localhost:5001", "/imgVereador/", NomeArquivo);
+                    prefeito.Url = string.Concat("https://localhost:5001", "/imgPrefeito/", NomeArquivo);
 
-                    await _InterfaceVereadorApp.UpdateVereador(Vereador);
+                    await _InterfaceVereadorApp.UpdateVereador(prefeito);
                 }
             }
             catch (Exception erro)

@@ -21,9 +21,9 @@ namespace WebApiSite.Controllers
 
 
         [HttpGet("/api/ListaVereador")]
-        public async Task<JsonResult> ListaVereadors(string descricao)
+        public async Task<JsonResult> ListaVereador( )
         {
-            return Json(await _InterfaceVereadorApp.ListarVereadorUsuario(descricao));
+            return Json(await _InterfaceVereadorApp.ListarVereadorUsuario());
         }
 
     }

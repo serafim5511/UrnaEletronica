@@ -8,10 +8,17 @@ let numeros = document.querySelector('.d-1-3');
 let etapaAtual = 5;
 let numero = '';
 let votoBranco = false;
-let votos = [];
+let finaliza = '';
+let id = '';
 
 async function comecarEtapa() {
-    let etapa = await Etapas();
+    let etapa = '';
+    if (etapaAtual == 5) {
+        etapa = await Vereador();
+    } else {
+
+        etapa = await Prefeito();
+    }
 
     let numeroHTML = '';
     numero = '';
@@ -40,7 +47,11 @@ async function comecarEtapa() {
     numeros.innerHTML = numeroHTML;
 }
 async function atualizaInterface(){
-    let etapa = await Etapas();
+    if (etapaAtual == 5) {
+        etapa = await Vereador();
+    } else {
+        etapa = await Prefeito();
+    }
    
     let candidato = etapa.filter((item)=>{
         if(item.numero == numero) {
@@ -59,6 +70,7 @@ async function atualizaInterface(){
         }
         seuVotoPara.style.display = 'block';
         aviso.style.display = 'block';
+        id = candidato.id
         //descricao.innerHTML = 'Nome: ${candidato.nome}<br/>Partido: ${candidato.partido}';
         descricao.innerHTML = 'Nome: '+candidato.nome+'<br/>'+'Partido: '+candidato.partido;
 
@@ -69,8 +81,6 @@ async function atualizaInterface(){
                 //fotosHTML += '<div class="d-1-image"> <img src="Images/${candidato.fotos[i].url}" alt="" />${candidato.fotos[i].legenda}</div>';
                 fotosHTML += '<div class="d-1-image"> <img src="Images/'+candidato.url+'" alt="" />'+candidato.legenda+'</div>';
             }
- 
-        
 
         lateral.innerHTML = fotosHTML;
     }else {
@@ -119,41 +129,59 @@ function corrige() {
     comecarEtapa();
 }
 async function confirma() {
-    let etapa = await Etapas();
-
+    if (etapaAtual == 5) {
+        etapa = await Vereador();
+    } else {
+        etapa = await Prefeito();
+    }
     let votoConfirmado = false;
     let somConfirma = new Audio("audios/confirma.mp3");
 
-    if (votoBranco === true) {
-        votoConfirmado = true;
-        somConfirma.play();
-
-        votos.push({
-            etapa: etapa.titulo,
-            voto: 'branco'
-        });
-    }
-    else
+    if (votoBranco === true)
     {
-               
         votoConfirmado = true;
         somConfirma.play();
 
-        votos.push({
-            etapa: etapa.titulo,
-            voto: numero
-        });
-
-    
+        //votos.push({
+        //    etapa: etapa.titulo,
+        //    voto: 'branco'
+        //});
     }
+    else if (numero.length === etapaAtual)
+    {
+        votoConfirmado = true;
+        somConfirma.play();
+
+        //votos.push({
+        //    etapa: etapas[etapaAtual].titulo,
+        //    voto: numero
+        //});
+    }
+    
 
     if(votoConfirmado) {
-        if (etapa !== undefined) {
+        if (etapaAtual != 2) {
+
+
+            await fetch("/api/VotacaoVereador?id="+id, {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+
             etapaAtual = 2;
             comecarEtapa();
         } else {
+            await fetch("/api/VotacaoPrefeito?id=" + id, {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
             document.querySelector('.tela').innerHTML = '<div class="aviso--gigante pisca">FIM</div>';
-            console.log(votos);
         }
     }
 }

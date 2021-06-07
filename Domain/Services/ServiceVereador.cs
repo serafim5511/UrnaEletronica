@@ -24,41 +24,25 @@ namespace Domain.Services
         {
             var validaNome = Vereador.ValidarPropriedadeString(Vereador.Nome, "Nome");
 
-           /* var validaValor = Vereador.ValidarPropriedadeDecimal(Vereador.Valor, "Valor");
+         
 
-            var validaQtdEstoque = Vereador.ValidarPropriedadeInt(Vereador.QtdEstoque, "QtdEstoque");*/
-
-            if (validaNome /*&& validaValor && validaQtdEstoque*/)
+            if (validaNome )
             {
                 Vereador.DataCadastro = DateTime.Now;
-                /*Vereador.DataAlteracao = DateTime.Now;
-                Vereador.Estado = true;*/
+                
                 await _IVereador.Add(Vereador);
             }
         }
 
-       /* public async Task<List<Vereador>> ListarVereadorComEstoque(string descricao)
-        {
-            if (string.IsNullOrWhiteSpace(descricao))
-                return await _IVereador.ListarVereadors(p => p.QtdEstoque > 0);
-            else
-            {
-                return await _IVereador.ListarVereadors(p => p.QtdEstoque > 0
-                && p.Nome.ToUpper().Contains(descricao.ToUpper()));
-            }
-        }*/
-
+     
         public async Task UpdateVereador(Vereador Vereador)
         {
             var validaNome = Vereador.ValidarPropriedadeString(Vereador.Nome, "Nome");
 
-            /*var validaValor = Vereador.ValidarPropriedadeDecimal(Vereador.Valor, "Valor");
+          
 
-            var validaQtdEstoque = Vereador.ValidarPropriedadeInt(Vereador.QtdEstoque, "QtdEstoque");*/
-
-            if (validaNome /*&& validaValor && validaQtdEstoque*/)
+            if (validaNome)
             {
-                //Vereador.candidato.DataAlteracao = DateTime.Now;
 
                 await _IVereador.Update(Vereador);
             }

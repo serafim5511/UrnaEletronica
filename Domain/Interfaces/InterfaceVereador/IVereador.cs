@@ -10,14 +10,9 @@ namespace Domain.Interfaces.InterfaceVereador
 {
     public interface IVereador : IGeneric<Vereador>
     {
-        Task<List<Vereador>> ListarVereadorsUsuario(string userId);
+        Task<List<Vereador>> ListarVereadorsUsuario();
 
         Task<List<Vereador>> ListarVereadors(Expression<Func<Vereador, bool>> exVereador);
 
-/*        Task<List<Vereador>> ListarVereadorsCarrinhoUsuario(string userId);
-*/
-       /* Task<Vereador> ObterVereadorCarrinho(int idVereadorCarrinho);
-
-        Task<List<Vereador>> ListarVereadorsVendidos(string userId, string filtro);*/
     }
 }

@@ -30,7 +30,7 @@ objetoDivItemDashBoard.CriartabelaPesquisa = function () {
     tr.append("<th>Valor</th>")
     tabela.append(tr);
 
-    var stringUrl = "/api/ListarCandidatosVendidos";
+    var stringUrl = "/api/RetornoPrefeitos";
 
     $.ajax({
         type: "GET",
@@ -41,7 +41,7 @@ objetoDivItemDashBoard.CriartabelaPesquisa = function () {
             data.forEach(function (entidade) {
                 var row = $('<tr>');
                 row.append("<th>" + entidade.nome + "</th>");
-                row.append("<th>" + entidade.valor + "</th>");
+                row.append("<th>" + entidade.voto + "</th>");
                 tabela.append(row);
             });
         }
@@ -63,7 +63,7 @@ objetoDivItemDashBoard.Pesquisa = function () {
     tr.append("<th>Valor</th>")
     tabela.html(tr);
 
-    var stringUrl = "/api/ListarCandidatosVendidos";
+    var stringUrl = "/api/RetornoPrefeitos";
 
     var filtro = $("#txtPesquisa").val();
 
@@ -77,7 +77,7 @@ objetoDivItemDashBoard.Pesquisa = function () {
             data.forEach(function (entidade) {
                 var row = $('<tr>');
                 row.append("<th>" + entidade.nome + "</th>");
-                row.append("<th>" + entidade.valor + "</th>");
+                row.append("<th>" + entidade.voto + "</th>");
                 tabela.append(row);
             });
         }

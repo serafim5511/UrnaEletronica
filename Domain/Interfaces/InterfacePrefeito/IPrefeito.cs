@@ -10,14 +10,9 @@ namespace Domain.Interfaces.InterfacePrefeito
 {
     public interface IPrefeito : IGeneric<Prefeito>
     {
-        Task<List<Prefeito>> ListarPrefeitosUsuario(string userId);
+        Task<List<Prefeito>> ListarPrefeitosUsuario();
 
         Task<List<Prefeito>> ListarPrefeitos(Expression<Func<Prefeito, bool>> exPrefeito);
 
-/*        Task<List<Prefeito>> ListarPrefeitosCarrinhoUsuario(string userId);
-*/
-       /* Task<Prefeito> ObterPrefeitoCarrinho(int idPrefeitoCarrinho);
-
-        Task<List<Prefeito>> ListarPrefeitosVendidos(string userId, string filtro);*/
     }
 }

@@ -21,9 +21,9 @@ namespace WebApiSite.Controllers
 
 
         [HttpGet("/api/ListaPrefeito")]
-        public async Task<JsonResult> ListaPrefeito(string descricao)
+        public async Task<JsonResult> ListaPrefeito( )
         {
-            return Json(await _InterfacePrefeitoApp.ListarPrefeitoUsuario(descricao));
+            return Json(await _InterfacePrefeitoApp.ListarPrefeitoUsuario());
         }
 
     }

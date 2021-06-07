@@ -1,5 +1,5 @@
-async function Etapas () {
-     let etapas = await fetch('/api/RetornoCandidatos').then(res => res.json());
+async function Prefeito() {
+    let etapas = await fetch('/api/RetornoPrefeitos').then(res => res.json());
     return etapas;
 }
 

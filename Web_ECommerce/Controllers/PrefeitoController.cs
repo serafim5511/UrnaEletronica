@@ -20,22 +20,24 @@ namespace Web_ECommerce.Controllers
     [LogActionFilter]
     public class PrefeitoController : BaseController
     {
+        public readonly InterfaceVereadorApp _InterfaceVereadorApp;
 
         public readonly InterfacePrefeitoApp _InterfacePrefeitoApp;
         private IWebHostEnvironment _environment;
 
-        public PrefeitoController(InterfacePrefeitoApp InterfacePrefeitoApp, UserManager<ApplicationUser> userManager, ILogger<PrefeitoController> logger, IWebHostEnvironment environment)
+        public PrefeitoController(InterfacePrefeitoApp InterfacePrefeitoApp, UserManager<ApplicationUser> userManager, ILogger<PrefeitoController> logger, IWebHostEnvironment environment, InterfaceVereadorApp InterfaceVereadorApp)
             : base(logger, userManager)
         {
             _InterfacePrefeitoApp = InterfacePrefeitoApp;
             _environment = environment;
+            _InterfaceVereadorApp = InterfaceVereadorApp;
         }
 
         // GET: PrefeitoController
         public async Task<IActionResult> Index()
         {
             var idUsuario = await RetornarIdUsuarioLogado();
-            var test = await _InterfacePrefeitoApp.ListarPrefeitoUsuario(idUsuario);
+            var test = await _InterfacePrefeitoApp.ListarPrefeitoUsuario();
 
             return View(test);
         }
@@ -61,7 +63,16 @@ namespace Web_ECommerce.Controllers
             try
             {
                 var idUsuario = await RetornarIdUsuarioLogado();
+                var test = await _InterfacePrefeitoApp.ListarPrefeitoUsuario();
 
+                foreach (var item in test)
+                {
+                    if(item.Numero == Prefeito.Numero)
+                    {
+                        ViewBag.existeNumero = "Ja existe esse numero";
+                        return View("Create", Prefeito);
+                    }
+                }
                 Prefeito.UserId = idUsuario;
                 Prefeito.partido = Titulo.Prefeito;
 
@@ -156,69 +167,27 @@ namespace Web_ECommerce.Controllers
             }
         }
 
-        [HttpGet("/api/RetornoCandidatos")]
-        public async Task<IActionResult> RetornoCandidatos()
+        [HttpGet("/api/RetornoPrefeitos")]
+        public async Task<IActionResult> RetornoPrefeitos()
         {
-            
             var idUsuario = await RetornarIdUsuarioLogado();
-            var teste =await _InterfacePrefeitoApp.ListarPrefeitoUsuario(idUsuario);
+            var teste = await _InterfacePrefeitoApp.ListarPrefeitoUsuario();
             return Json(teste);
         }
 
+        [HttpPost("/api/VotacaoPrefeito")]
+        public async Task<IActionResult> VotacaoPrefeito(int id)
+        {
+            var resul = await _InterfacePrefeitoApp.GetEntityById(id);
+            resul.voto++;
+            await _InterfacePrefeitoApp.UpdatePrefeito(resul);
 
-/*[HttpGet("/api/ListarPrefeitoVendidos")]
-public async Task<JsonResult> ListarPrefeitoVendidos(string filtro)
-{
-    var idUsuario = await RetornarIdUsuarioLogado();
-
-    return Json(await _InterfacePrefeitoApp.ListarPrefeitoVendidos(idUsuario, filtro));
-}
-
-
-[AllowAnonymous]
-[HttpGet("/api/ListarPrefeitoComEstoque")]
-public async Task<JsonResult> ListarPrefeitoComEstoque(string descricao)
-{
-    return Json(await _InterfacePrefeitoApp.ListarPrefeitoComEstoque(descricao));
-}
-
-public async Task<IActionResult> ListarPrefeitoCarrinhoUsuario()
-{
-    var idUsuario = await RetornarIdUsuarioLogado();
-    return View(await _InterfacePrefeitoApp.ListarPrefeitoCarrinhoUsuario(idUsuario));
-
-}
-
-// GET: PrefeitoController/Delete/5
-public async Task<IActionResult> RemoverCarrinho(int id)
-{
-    return View(await _InterfacePrefeitoApp.ObterPrefeitoCarrinho(id));
-}
-
-// POST: PrefeitoController/Delete/5
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> RemoverCarrinho(int id, Prefeito Prefeito)
-{
-    try
-    {
-        var PrefeitoDeletar = await _InterfaceCompraUsuarioApp.GetEntityById(id);
-
-        await _InterfaceCompraUsuarioApp.Delete(PrefeitoDeletar);
-
-        return RedirectToAction(nameof(ListarPrefeitoCarrinhoUsuario));
-    }
-    catch (Exception erro)
-    {
-        await LogEcommerce(EnumTipoLog.Erro, erro);
-        return View();
-    }
-}
-*/
+            return Json("");
+        }
         public async Task SalvarImagemPrefeito(Prefeito PrefeitoTela)
         {
             try
-            {
+            { 
                 var Prefeito = await _InterfacePrefeitoApp.GetEntityById(PrefeitoTela.Id);
 
                 if (PrefeitoTela.Imagem != null)
@@ -249,7 +218,18 @@ public async Task<IActionResult> RemoverCarrinho(int id, Prefeito Prefeito)
             }
 
         }
+        public async Task<IActionResult> Dashboard()
+        {
+            ModelPai pai = new ModelPai();
+          
 
+            var idUsuario = await RetornarIdUsuarioLogado();
+
+            pai.Vereador = await _InterfaceVereadorApp.ListarVereadorUsuario();
+
+            pai.Prefeito = await _InterfacePrefeitoApp.ListarPrefeitoUsuario();
+            return View(pai);
+        }
 
     }
 }

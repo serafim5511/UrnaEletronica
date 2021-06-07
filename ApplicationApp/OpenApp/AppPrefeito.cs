@@ -20,18 +20,6 @@ namespace ApplicationApp.OpenApp
         }
 
 
-       /* public async Task<List<Candidato>> ListarCandidatosCarrinhoUsuario(string userId)
-        {
-            return await _ICandidato.ListarCandidatosCarrinhoUsuario(userId);
-        }
-*/
-      /*  public async Task<Candidato> ObterCandidatoCarrinho(int idCandidatoCarrinho)
-        {
-            return await _ICandidato.ObterCandidatoCarrinho(idCandidatoCarrinho);
-        }
-
-*/
-
         public async Task AddPrefeito(Prefeito Prefeito)
         {
             await _IServicePrefeito.AddPrefeito(Prefeito);
@@ -41,16 +29,11 @@ namespace ApplicationApp.OpenApp
             await _IServicePrefeito.UpdatePrefeito(Prefeito);
         }
 
-        public async Task<List<Prefeito>> ListarPrefeitoUsuario(string userId)
+        public async Task<List<Prefeito>> ListarPrefeitoUsuario()
         {
-            return await _IPrefeito.ListarPrefeitosUsuario(userId);
+            return await _IPrefeito.ListarPrefeitosUsuario();
         }
 
-        /*public async Task<List<Candidato>> ListarCandidatosVendidos(string userId, string filtro)
-        {
-            return await _ICandidato.ListarCandidatosVendidos(userId, filtro);
-        }
-*/
 
         public async Task Add(Prefeito Objeto)
         {
@@ -75,11 +58,6 @@ namespace ApplicationApp.OpenApp
             await _IPrefeito.Update(Objeto);
         }
 
-       /* public async Task<List<Prefeito>> ListarPrefeitoComEstoque(string descricao)
-        {
-            return await _IServicePrefeito.ListarPrefeitosComEstoque(descricao);
-        }*/
 
-       
     }
 }

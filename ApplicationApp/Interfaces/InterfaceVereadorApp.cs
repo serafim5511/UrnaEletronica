@@ -11,14 +11,7 @@ namespace ApplicationApp.Interfaces
         Task AddVereador(Vereador Vereador);
         Task UpdateVereador(Vereador Vereador);
 
-        Task<List<Vereador>> ListarVereadorUsuario(string userId);
+        Task<List<Vereador>> ListarVereadorUsuario();
 
-        //Task<List<Candidato>> ListarCandidatosComEstoque(string descricao);
-
-        //Task<List<Candidato>> ListarCandidatosCarrinhoUsuario(string userId);
-
-        //Task<Candidato> ObterCandidatoCarrinho(int idCandidatoCarrinho);
-
-        //Task<List<Candidato>> ListarCandidatosVendidos(string userId, string filtro);
     }
 }

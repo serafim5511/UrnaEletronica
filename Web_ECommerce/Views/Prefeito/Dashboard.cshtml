@@ -1,0 +1,181 @@
+﻿@model Entities.Entities.ModelPai
+
+@{
+    var resul = 0;
+    decimal resulValor = 0;
+}
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>
+                    @Model.Vereador.Count()
+                </h3>
+
+                <p>Total de vereadores</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-success">
+            <div class="inner">
+                @*<h3>53<sup style="font-size: 20px">%</sup></h3>*@
+                <h3>
+                    @Model.Prefeito.Count()
+                </h3>
+                <p>Total de Prefeitos</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>
+                    @foreach (var item in Model.Vereador)
+                    {
+
+                        if (item.voto > 0)
+                        {
+                            resul++;
+                        }
+
+                    }
+                    @resul
+                </h3>
+
+                <p>Quantidade de votos de vereador</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>
+                    @foreach (var item in Model.Prefeito)
+                    {
+
+                        if (item.voto > 0)
+                        {
+                            resulValor++;
+                        }
+
+                    }
+                    @resulValor
+                </h3>
+
+                <p>Quantidade de votos de Prefeito</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
+<!-- DONUT CHART -->
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Donut Chart</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<link href="~/css/ObjetoItemDashBoard.css" rel="stylesheet" />
+<script src="~/js/ObjetoItemDashBoard.js"></script>
+<script src="~/js/dashBoardPortal.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: "/api/RetornoPrefeitos",
+            dataType: "JSON",
+            cache: false,
+            async: true,
+
+            success: function (data) {
+                var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+
+                var donutData = { labels: [], datasets: [{ data: [], backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],}]};
+
+                data.forEach(function (Entitie) {
+                    donutData.datasets[0].data.push(Entitie.voto);
+
+                    donutData.labels.push(Entitie.nome);
+
+                });
+                var donutOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
+
+                new Chart(donutChartCanvas, {
+                    type: 'doughnut',
+                    data: donutData,
+                    options: donutOptions
+                })
+            }
+        });
+
+        @*var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Total de vendas',
+                'IE',
+                'FireFox',
+                'Safari',
+                'Opera',
+                'Navigator',
+            ],
+            datasets: [
+                {
+                    data: [1, 5, 4, 6, 3, 1],
+                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+
+        new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+
+*@
+
+
+    })
+</script>

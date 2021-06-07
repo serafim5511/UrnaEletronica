@@ -24,39 +24,26 @@ namespace Domain.Services
         {
             var validaNome = Prefeito.ValidarPropriedadeString(Prefeito.Nome, "Nome");
 
-            /*var validaValor = Prefeito.ValidarPropriedadeDecimal(Prefeito.Valor, "Valor");
+          
 
-            var validaQtdEstoque = Prefeito.ValidarPropriedadeInt(Prefeito.QtdEstoque, "QtdEstoque");*/
-
-            if (validaNome /*&& validaValor && validaQtdEstoque*/)
+            if (validaNome )
             {
                 Prefeito.DataCadastro = DateTime.Now;
                 await _IPrefeito.Add(Prefeito);
             }
         }
 
-        /*public async Task<List<Prefeito>> ListarPrefeitosComEstoque(string descricao)
-        {
-            if (string.IsNullOrWhiteSpace(descricao))
-                return await _IPrefeito.ListarPrefeitos(p => p.QtdEstoque > 0);
-            else
-            {
-                return await _IPrefeito.ListarPrefeitos(p => p.QtdEstoque > 0
-                && p.Nome.ToUpper().Contains(descricao.ToUpper()));
-            }
-        }*/
+        
 
         public async Task UpdatePrefeito(Prefeito Prefeito)
         {
             var validaNome = Prefeito.ValidarPropriedadeString(Prefeito.Nome, "Nome");
 
-           /*var validaValor = Prefeito.ValidarPropriedadeDecimal(Prefeito.Valor, "Valor");
+          
 
-            var validaQtdEstoque = Prefeito.ValidarPropriedadeInt(Prefeito.QtdEstoque, "QtdEstoque");*/
-
-            if (validaNome /*&& validaValor && validaQtdEstoque*/)
+            if (validaNome )
             {
-                //Prefeito.candidato.DataAlteracao = DateTime.Now;
+           
 
                 await _IPrefeito.Update(Prefeito);
             }

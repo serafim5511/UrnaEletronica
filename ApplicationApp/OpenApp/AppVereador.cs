@@ -20,18 +20,6 @@ namespace ApplicationApp.OpenApp
         }
 
 
-       /* public async Task<List<Vereador>> ListarVereadorsCarrinhoUsuario(string userId)
-        {
-            return await _IVereador.ListarVereadorsCarrinhoUsuario(userId);
-        }
-*/
-      /*  public async Task<Vereador> ObterVereadorCarrinho(int idVereadorCarrinho)
-        {
-            return await _IVereador.ObterVereadorCarrinho(idVereadorCarrinho);
-        }
-
-*/
-
         public async Task AddVereador(Vereador Vereador)
         {
             await _IServiceVereador.AddVereador(Vereador);
@@ -41,16 +29,10 @@ namespace ApplicationApp.OpenApp
             await _IServiceVereador.UpdateVereador(Vereador);
         }
 
-        public async Task<List<Vereador>> ListarVereadorUsuario(string userId)
+        public async Task<List<Vereador>> ListarVereadorUsuario()
         {
-            return await _IVereador.ListarVereadorsUsuario(userId);
+            return await _IVereador.ListarVereadorsUsuario();
         }
-
-        /*public async Task<List<Vereador>> ListarVereadorsVendidos(string userId, string filtro)
-        {
-            return await _IVereador.ListarVereadorsVendidos(userId, filtro);
-        }
-*/
 
         public async Task Add(Vereador Objeto)
         {
@@ -75,11 +57,5 @@ namespace ApplicationApp.OpenApp
             await _IVereador.Update(Objeto);
         }
 
-      /*  public async Task<List<Vereador>> ListarVereadorsComEstoque(string descricao)
-        {
-            return await _IServiceVereador.ListarVereadorComEstoque(descricao);
-        }*/
-
-       
     }
 }
